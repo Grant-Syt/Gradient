@@ -50,21 +50,21 @@ public class gradientImpl implements gradient {
 		 * return: true for success
 		 * effect: draw random gradient on image
 		 */
-
+		
 		int numOfGradientPoints = ((int) (Math.random() * 5) + 2);
 		ArrayList<gradientPoint> gradientPoints = new ArrayList<gradientPoint>();
 		boolean onSector1 = ((int) (Math.random()*2)) == 0;
 		int currentSide;
 		/* sector 1
-		 * 0: top right corner
+		 * 0: bottom right corner
 		 * 1: right
-		 * 2: bottom right
-		 * 3: bottom
+		 * 2: top right
+		 * 3: top
 		 * sector 2
-		 * 4: bottom left
+		 * 4: top left
 		 * 5: left
-		 * 6: top left
-		 * 7: top
+		 * 6: bottom left
+		 * 7: bottom
 		 */
 		ArrayList<Integer> sector1 = new ArrayList<Integer>();
 		sector1.add(0);
@@ -82,20 +82,20 @@ public class gradientImpl implements gradient {
 			if(onSector1) {
 				currentSide = (int) (Math.random() * sector1.size());
 				if (sector1.get(currentSide) == 0) {
-					// top right
+					// bottom right
 					gradientPoints.add(new gradientPointImpl(img.getWidth(), 
 							img.getHeight(), (int) (Math.random() * 5)));
 				} else if(sector1.get(currentSide) == 1) {
 					// right
 					gradientPoints.add(new gradientPointImpl(img.getWidth(),
-							(int) ((Math.random()*(img.getHeight()*.75)) + img.getHeight()*.25), (int) (Math.random() * 5)));
+							(int) ((Math.random()*(img.getHeight()*.51)) + img.getHeight()*.25), (int) (Math.random() * 5)));
 				} else if(sector1.get(currentSide) == 2) {
-					// bottom right
+					// top right
 					gradientPoints.add(new gradientPointImpl(img.getWidth(),
 							0, (int) (Math.random() * 5)));
 				} else {
-					// bottom
-					gradientPoints.add(new gradientPointImpl((int) ((Math.random()*(img.getWidth()*.75)) + img.getWidth()*.25),
+					// top
+					gradientPoints.add(new gradientPointImpl((int) ((Math.random()*(img.getWidth()*.51)) + img.getWidth()*.25),
 							0, (int) (Math.random() * 5)));
 				}
 				sector1.remove(currentSide);
@@ -103,20 +103,20 @@ public class gradientImpl implements gradient {
 			} else {
 				currentSide = (int) (Math.random() * sector2.size());
 				if (sector2.get(currentSide) == 4) {
-					// bottom left
+					// top left
 					gradientPoints.add(new gradientPointImpl(0, 
 							0, (int) (Math.random() * 5)));
 				} else if(sector2.get(currentSide) == 5) {
 					// left
 					gradientPoints.add(new gradientPointImpl(0,
-							(int) ((Math.random()*(img.getHeight()*.75)) + img.getHeight()*.25), (int) (Math.random() * 5)));
+							(int) ((Math.random()*(img.getHeight()*.51)) + img.getHeight()*.25), (int) (Math.random() * 5)));
 				} else if(sector2.get(currentSide) == 6) {
-					// top left
+					// bottom left
 					gradientPoints.add(new gradientPointImpl(0,
 							img.getHeight(), (int) (Math.random() * 5)));
 				} else {
-					// top
-					gradientPoints.add(new gradientPointImpl((int) ((Math.random()*(img.getWidth()*.75)) + img.getWidth()*.25),
+					// bottom
+					gradientPoints.add(new gradientPointImpl((int) ((Math.random()*(img.getWidth()*.51)) + img.getWidth()*.25),
 							img.getHeight(), (int) (Math.random() * 5)));
 				}
 				sector2.remove(currentSide);
@@ -137,9 +137,12 @@ public class gradientImpl implements gradient {
 		graphics.setColor(Color.WHITE);
 		graphics.fillRect(0, 0, img.getWidth(), img.getHeight());
 		for(int i = 0; i < numOfGradientPoints; i++) {
-			graphics.setColor(Color.CYAN);
 			gradientPoint currentPoint = gradientPoints.get(i);
-			graphics.fillOval(currentPoint.getX(), currentPoint.getY(), (int) img.getWidth()/2, (int) img.getWidth()/2);
+			Color currentColor = new Color((int) (Math.random()*256), (int) (Math.random()*256), (int) (Math.random()*256), (currentPoint.getStrength() + 1) * 51);
+			graphics.setColor(currentColor);
+			int circleDiameter = (int) img.getWidth()*2;
+//			int circleDiameter = 10;
+			graphics.fillOval(currentPoint.getX() - (circleDiameter/2), currentPoint.getY() - (circleDiameter/2), circleDiameter, circleDiameter);
 		}
 		
 		graphics.dispose();
