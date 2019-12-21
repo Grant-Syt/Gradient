@@ -1,8 +1,8 @@
 package Gradient;
 
 public interface gradient {
-	public boolean newImage(int x,int y);
-	// public boolean newImage(String x);
-	public boolean gradientify();
-	public boolean print(String name);
+	public void newImage(int x,int y);
+	public void drawGradient();
+	public void drawCircleWaterColor();
+	public boolean saveCurrentImage(String name);
 }

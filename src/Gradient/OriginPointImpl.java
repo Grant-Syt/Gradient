@@ -1,11 +1,11 @@
 package Gradient;
 
-public class gradientPointImpl implements gradientPoint {
+public class OriginPointImpl implements OriginPoint {
 	private int x;
 	private int y;
 	private int strength;
 	
-	public gradientPointImpl(int x, int y, int strength) {
+	public OriginPointImpl(int x, int y, int strength) {
 		this.x = x;
 		this.y = y;
 		this.strength = strength;

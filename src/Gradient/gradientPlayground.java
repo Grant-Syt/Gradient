@@ -3,10 +3,10 @@ package Gradient;
 public class gradientPlayground {
 	public static void main(String[] args) {
 		
-		gradient x = new gradientImpl(6016, 3384);
+		gradient x = new gradientImpl(100, 100);
 		
-		System.out.println(x.gradientify());
-		x.print("testimage");
+		x.drawCircleWaterColor();
+		x.saveCurrentImage("testimage");
 
 	}
 }
