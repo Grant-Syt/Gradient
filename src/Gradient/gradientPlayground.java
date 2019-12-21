@@ -5,7 +5,7 @@ public class gradientPlayground {
 		
 		gradient x = new gradientImpl(100, 100);
 		
-		x.drawCircleWaterColor();
+		x.drawGradient();
 		x.saveCurrentImage("testimage");
 
 	}
