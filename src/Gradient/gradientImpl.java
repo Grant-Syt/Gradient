@@ -65,19 +65,19 @@ public class gradientImpl implements gradient {
 				if (sector1.get(currentSide) == 0) {
 					// bottom right
 					gradientPoints.add(new OriginPointImpl(img.getWidth(), 
-							img.getHeight(), (int) (Math.random() * 5)));
+							img.getHeight(), 4));
 				} else if(sector1.get(currentSide) == 1) {
 					// right
 					gradientPoints.add(new OriginPointImpl(img.getWidth(),
-							(int) ((Math.random()*(img.getHeight()*.51)) + img.getHeight()*.25), (int) (Math.random() * 5)));
+							(int) ((Math.random()*(img.getHeight()*.51)) + img.getHeight()*.25), 4));
 				} else if(sector1.get(currentSide) == 2) {
 					// top right
 					gradientPoints.add(new OriginPointImpl(img.getWidth(),
-							0, (int) (Math.random() * 5)));
+							0, 4));
 				} else {
 					// top
 					gradientPoints.add(new OriginPointImpl((int) ((Math.random()*(img.getWidth()*.51)) + img.getWidth()*.25),
-							0, (int) (Math.random() * 5)));
+							0, 4));
 				}
 				sector1.remove(currentSide);
 				onSector1 = false;
@@ -86,19 +86,19 @@ public class gradientImpl implements gradient {
 				if (sector2.get(currentSide) == 4) {
 					// top left
 					gradientPoints.add(new OriginPointImpl(0, 
-							0, (int) (Math.random() * 5)));
+							0, 4));
 				} else if(sector2.get(currentSide) == 5) {
 					// left
 					gradientPoints.add(new OriginPointImpl(0,
-							(int) ((Math.random()*(img.getHeight()*.51)) + img.getHeight()*.25), (int) (Math.random() * 5)));
+							(int) ((Math.random()*(img.getHeight()*.51)) + img.getHeight()*.25), 4));
 				} else if(sector2.get(currentSide) == 6) {
 					// bottom left
 					gradientPoints.add(new OriginPointImpl(0,
-							img.getHeight(), (int) (Math.random() * 5)));
+							img.getHeight(), 4));
 				} else {
 					// bottom
 					gradientPoints.add(new OriginPointImpl((int) ((Math.random()*(img.getWidth()*.51)) + img.getWidth()*.25),
-							img.getHeight(), (int) (Math.random() * 5)));
+							img.getHeight(), 4));
 				}
 				sector2.remove(currentSide);
 				onSector1 = true;
@@ -119,92 +119,113 @@ public class gradientImpl implements gradient {
 		graphics.fillRect(0, 0, img.getWidth(), img.getHeight());
 		
 		for(int a = 0; a < numOfGradientPoints; a++) {
+			Color oldColor;
+			int oldColorR;
+			int oldColorG;
+			int oldColorB;
+			int oldColorAlpha;
+			int biggerSide;
+
+			if (img.getHeight() > img.getWidth()) {
+				biggerSide = img.getHeight();
+			} else {
+				biggerSide = img.getWidth();
+			}
 			
 			// origin and origin color
 			OriginPoint centerPoint = gradientPoints.get(a);
 			int colorR = (int) (Math.random()*256);
 			int colorG = (int) (Math.random()*256);
 			int colorB = (int) (Math.random()*256);
-			int colorAlpha = (centerPoint.getStrength() + 1) * 51;
+			int colorAlpha = (int) ((centerPoint.getStrength() + 1) * 51);
 			
 			//origin pixel
-			
-			Color oldColor = new Color(img.getRGB(centerPoint.getX(), centerPoint.getY()));
-			int oldColorR = oldColor.getRed();
-			int oldColorG = oldColor.getGreen();
-			int oldColorB = oldColor.getBlue();
-			int oldColorAlpha = oldColor.getAlpha();
-			graphics.setColor(new Color((int) ((colorR + oldColorR)/2), (int) ((colorG + oldColorG)/2), (int) ((colorB + oldColorB)/2), (int) ((colorAlpha + oldColorAlpha)/2)));
-			graphics.drawLine(centerPoint.getX(), centerPoint.getY(), centerPoint.getX(), centerPoint.getY());
-			colorAlpha--;
+			if (!(centerPoint.getX() < 0 || centerPoint.getX() >= img.getWidth() || centerPoint.getY() < 0 || centerPoint.getY() >= img.getHeight())) {
+				oldColor = new Color(img.getRGB(centerPoint.getX(), centerPoint.getY()));
+				oldColorR = oldColor.getRed();
+				oldColorG = oldColor.getGreen();
+				oldColorB = oldColor.getBlue();
+				oldColorAlpha = oldColor.getAlpha();
+				graphics.setColor(new Color((int) ((colorR + oldColorR)/2), (int) ((colorG + oldColorG)/2), (int) ((colorB + oldColorB)/2), (int) ((colorAlpha + oldColorAlpha)/2)));
+				graphics.drawLine(centerPoint.getX(), centerPoint.getY(), centerPoint.getX(), centerPoint.getY());
+			}
+			colorAlpha -= (int) (255/(biggerSide+1));
 			
 			// all layers
 			int rowLength = 3;
-			int layerCount = 0;
-			int currentX;
-			int currentY;
+			int layerCount = 1;
+			int currentX = (int) (img.getWidth()/2);
+			int currentY = (int) (img.getHeight()/2);
 			
-			while(colorAlpha > 0) {
-				
+			while(layerCount < biggerSide) {
+
 				//top
 				currentX = centerPoint.getX() - layerCount;
 				currentY = centerPoint.getY() - layerCount;
 				for(int b = 0; b < rowLength-1; b++) {
-					oldColor = new Color(img.getRGB(currentX, currentY));
-					oldColorR = oldColor.getRed();
-					oldColorG = oldColor.getGreen();
-					oldColorB = oldColor.getBlue();
-					oldColorAlpha = oldColor.getAlpha();
-					graphics.setColor(new Color((int) ((colorR + oldColorR)/2), (int) ((colorG + oldColorG)/2), (int) ((colorB + oldColorB)/2), (int) ((colorAlpha + oldColorAlpha)/2)));
-					graphics.drawLine(currentX, currentY, currentX, currentY);
+					if (!(currentX < 0 || currentX >= img.getWidth() || currentY < 0 || currentY >= img.getHeight())) {
+						oldColor = new Color(img.getRGB(currentX, currentY));
+						oldColorR = oldColor.getRed();
+						oldColorG = oldColor.getGreen();
+						oldColorB = oldColor.getBlue();
+						oldColorAlpha = oldColor.getAlpha();
+						graphics.setColor(new Color((int) ((colorR + oldColorR)/2), (int) ((colorG + oldColorG)/2), (int) ((colorB + oldColorB)/2), (int) ((colorAlpha + oldColorAlpha)/2)));
+						graphics.drawLine(currentX, currentY, currentX, currentY);
+					}
 					currentX++;
 				}
-				
+
 				// right
 				currentX = centerPoint.getX() + layerCount;
 				currentY = centerPoint.getY() - layerCount;
 				for(int b = 0; b < rowLength-1; b++) {
-					oldColor = new Color(img.getRGB(currentX, currentY));
-					oldColorR = oldColor.getRed();
-					oldColorG = oldColor.getGreen();
-					oldColorB = oldColor.getBlue();
-					oldColorAlpha = oldColor.getAlpha();
-					graphics.setColor(new Color((int) ((colorR + oldColorR)/2), (int) ((colorG + oldColorG)/2), (int) ((colorB + oldColorB)/2), (int) ((colorAlpha + oldColorAlpha)/2)));
-					graphics.drawLine(currentX, currentY, currentX, currentY);
+					if (!(currentX < 0 || currentX >= img.getWidth() || currentY < 0 || currentY >= img.getHeight())) {
+						oldColor = new Color(img.getRGB(currentX, currentY));
+						oldColorR = oldColor.getRed();
+						oldColorG = oldColor.getGreen();
+						oldColorB = oldColor.getBlue();
+						oldColorAlpha = oldColor.getAlpha();
+						graphics.setColor(new Color((int) ((colorR + oldColorR)/2), (int) ((colorG + oldColorG)/2), (int) ((colorB + oldColorB)/2), (int) ((colorAlpha + oldColorAlpha)/2)));
+						graphics.drawLine(currentX, currentY, currentX, currentY);
+					}
 					currentY++;
 				}
-				
+
 				//bottom
 				currentX = centerPoint.getX() + layerCount;
 				currentY = centerPoint.getY() + layerCount;
 				for(int b = 0; b < rowLength-1; b++) {
-					oldColor = new Color(img.getRGB(currentX, currentY));
-					oldColorR = oldColor.getRed();
-					oldColorG = oldColor.getGreen();
-					oldColorB = oldColor.getBlue();
-					oldColorAlpha = oldColor.getAlpha();
-					graphics.setColor(new Color((int) ((colorR + oldColorR)/2), (int) ((colorG + oldColorG)/2), (int) ((colorB + oldColorB)/2), (int) ((colorAlpha + oldColorAlpha)/2)));
-					graphics.drawLine(currentX, currentY, currentX, currentY);
+					if (!(currentX < 0 || currentX >= img.getWidth() || currentY < 0 || currentY >= img.getHeight())) {
+						oldColor = new Color(img.getRGB(currentX, currentY));
+						oldColorR = oldColor.getRed();
+						oldColorG = oldColor.getGreen();
+						oldColorB = oldColor.getBlue();
+						oldColorAlpha = oldColor.getAlpha();
+						graphics.setColor(new Color((int) ((colorR + oldColorR)/2), (int) ((colorG + oldColorG)/2), (int) ((colorB + oldColorB)/2), (int) ((colorAlpha + oldColorAlpha)/2)));
+						graphics.drawLine(currentX, currentY, currentX, currentY);
+					}
 					currentX--;
 				}
-				
+
 				// left
 				currentX = centerPoint.getX() - layerCount;
 				currentY = centerPoint.getY() + layerCount;
 				for(int b = 0; b < rowLength-1; b++) {
-					oldColor = new Color(img.getRGB(currentX, currentY));
-					oldColorR = oldColor.getRed();
-					oldColorG = oldColor.getGreen();
-					oldColorB = oldColor.getBlue();
-					oldColorAlpha = oldColor.getAlpha();
-					graphics.setColor(new Color((int) ((colorR + oldColorR)/2), (int) ((colorG + oldColorG)/2), (int) ((colorB + oldColorB)/2), (int) ((colorAlpha + oldColorAlpha)/2)));
-					graphics.drawLine(currentX, currentY, currentX, currentY);
+					if (!(currentX < 0 || currentX >= img.getWidth() || currentY < 0 || currentY >= img.getHeight())) {
+						oldColor = new Color(img.getRGB(currentX, currentY));
+						oldColorR = oldColor.getRed();
+						oldColorG = oldColor.getGreen();
+						oldColorB = oldColor.getBlue();
+						oldColorAlpha = oldColor.getAlpha();
+						graphics.setColor(new Color((int) ((colorR + oldColorR)/2), (int) ((colorG + oldColorG)/2), (int) ((colorB + oldColorB)/2), (int) ((colorAlpha + oldColorAlpha)/2)));
+						graphics.drawLine(currentX, currentY, currentX, currentY);
+					}
 					currentY--;
 				}
-				
+
 				rowLength += 2;
 				layerCount++;
-				colorAlpha--;
+				colorAlpha -= (int) (255/(biggerSide+1));
 			}
 		}
 		graphics.dispose();

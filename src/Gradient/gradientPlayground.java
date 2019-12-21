@@ -6,7 +6,7 @@ public class gradientPlayground {
 		gradient x = new gradientImpl(100, 100);
 		
 		x.drawGradient();
-		x.saveCurrentImage("testimage");
+		System.out.println(x.saveCurrentImage("testimage"));
 
 	}
 }
