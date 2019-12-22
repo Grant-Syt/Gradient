@@ -5,8 +5,8 @@ public class gradientPlayground {
 		
 		gradient x = new gradientImpl(100, 100);
 		
-		x.drawGradient();
-		System.out.println(x.saveCurrentImage("testimage"));
+		x.drawCircleWaterColor();
+		System.out.println(x.saveCurrentImage("testImage"));
 
 	}
 }
