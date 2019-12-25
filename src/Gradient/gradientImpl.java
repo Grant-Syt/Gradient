@@ -218,11 +218,12 @@ public class gradientImpl implements gradient {
 		boolean imageHasWhite = true;
 		int hasWhiteCount;
 		
-		// all layers
-		while(imageHasWhite == true) {
+		// add layers
+		while(imageHasWhite == true) { 
+			hasWhiteCount = (rowLength-1) * 4 * originPoints.size();
 			for(int a = 0; a < originPoints.size(); a++) { // add one layer to each gradient box
 				OriginPointImpl currentPoint = originPoints.get(a);
-				hasWhiteCount = (rowLength-1) * 4;
+				
 				// top
 				currentX = currentPoint.getX() - layerCount;
 				currentY = currentPoint.getY() - layerCount;
@@ -241,6 +242,8 @@ public class gradientImpl implements gradient {
 								(int) ((currentPoint.getColorB() + (oldColorB/oldColorDivisor))/2), 
 								(int) ((currentPoint.getColorAlpha() + (oldColorAlpha/oldColorDivisor))/2)));
 						graphics.drawLine(currentX, currentY, currentX, currentY);
+					} else {
+						hasWhiteCount--;
 					}
 					currentX++;
 				}
@@ -263,6 +266,8 @@ public class gradientImpl implements gradient {
 								(int) ((currentPoint.getColorB() + (oldColorB/oldColorDivisor))/2), 
 								(int) ((currentPoint.getColorAlpha() + (oldColorAlpha/oldColorDivisor))/2)));
 						graphics.drawLine(currentX, currentY, currentX, currentY);
+					} else {
+						hasWhiteCount--;
 					}
 					currentY++;
 				}
@@ -285,6 +290,8 @@ public class gradientImpl implements gradient {
 								(int) ((currentPoint.getColorB() + (oldColorB/oldColorDivisor))/2), 
 								(int) ((currentPoint.getColorAlpha() + (oldColorAlpha/oldColorDivisor))/2)));
 						graphics.drawLine(currentX, currentY, currentX, currentY);
+					} else {
+						hasWhiteCount--;
 					}
 					currentX--;
 				}
@@ -307,16 +314,21 @@ public class gradientImpl implements gradient {
 								(int) ((currentPoint.getColorB() + (oldColorB/oldColorDivisor))/2), 
 								(int) ((currentPoint.getColorAlpha() + (oldColorAlpha/oldColorDivisor))/2)));
 						graphics.drawLine(currentX, currentY, currentX, currentY);
+					} else {
+						hasWhiteCount--;
 					}
 					currentY--;
 				}
-				if (hasWhiteCount == 0) {
-					imageHasWhite = false;
-				}
 				currentPoint.setColorAlpha((int) (currentPoint.getColorAlpha() - (255/(biggerSide + 2))));
+			}
+			
+			if (hasWhiteCount == 0) {
+				imageHasWhite = false;
 			}
 			rowLength += 2;
 			layerCount++;
+			
+			// add some more layers
 		}
 		
 //		for(int a = 0; a < originPoints.size(); a++) {
